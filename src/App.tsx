@@ -193,10 +193,12 @@ function App() {
               </div>
             </div>
             <div className="hidden md:flex items-center space-x-6 text-sm text-gray-600">
-              <div className="flex items-center space-x-2">
-                <Calculator className="w-4 h-4" />
-                <span>Built by Ridwan Balogun</span>
-              </div>
+              <a href="https://balogunridwan.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                <div className="flex items-center space-x-2">
+                  <Calculator className="w-4 h-4" />
+                  <span>Built by Ridwan Balogun</span>
+                </div>
+              </a>
               {/* <div className="flex items-center space-x-2">
                 <Award className="w-4 h-4" />
                 <span>5-Point Scale</span>
