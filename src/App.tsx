@@ -382,22 +382,22 @@ function App() {
                 <p className="text-sm text-gray-600">GPA Calculator</p>
               </div>
             </div>
-            <div className="hidden md:flex items-center space-x-6 text-sm text-gray-600">
+            <div className="flex items-center space-x-2 sm:space-x-4 text-sm text-gray-600">
               <button
                 onClick={switchUser}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+                className="p-2 sm:px-3 sm:py-2 rounded-md hover:bg-gray-100 flex items-center space-x-1 sm:space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
                 title="Switch user"
               >
-                <User className="w-4 h-4" />
-                <span>Switch User</span>
+                <User className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-xs sm:text-sm">Switch</span>
               </button>
               <button
                 onClick={promptSave}
-                className="flex items-center space-x-2 text-emerald-600 hover:text-emerald-700"
+                className="p-2 sm:px-3 sm:py-2 rounded-md hover:bg-emerald-50 flex items-center space-x-1 sm:space-x-2 text-emerald-600 hover:text-emerald-700 transition-colors"
                 title="Save current progress"
               >
-                <Save className="w-4 h-4" />
-                <span>Save Progress</span>
+                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-xs sm:text-sm">Save</span>
               </button>
               <a href="https://balogunridwan.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
                 <div className="flex items-center space-x-2">
