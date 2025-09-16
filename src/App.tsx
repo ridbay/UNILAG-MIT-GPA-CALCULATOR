@@ -1,5 +1,18 @@
-import { useState } from 'react';
-import { Plus, Trash2, Calculator, BookOpen, TrendingUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Trash2, Calculator, BookOpen, TrendingUp, Save, User } from 'lucide-react';
+
+interface SavedResult {
+  id: string;
+  matricNumber: string;
+  courses: Course[];
+  gpa: number;
+  date: string;
+  graduationStatus: {
+    status: string;
+    color: string;
+    description: string;
+  };
+}
 
 interface Course {
   id: string;
@@ -17,7 +30,115 @@ interface CourseOption {
 }
 
 function App() {
+  // const [showMatricModal, setShowMatricModal] = useState(false);
+  const [matricNumber, setMatricNumber] = useState('');
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [savedResults, setSavedResults] = useState<SavedResult[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [isNewUser, setIsNewUser] = useState(() => {
+    // Check if user has a saved matric number
+    const savedMatric = localStorage.getItem('matricNumber');
+    if (savedMatric) {
+      // If returning user, load their data
+      const userResults = localStorage.getItem(`savedResults_${savedMatric}`);
+      if (userResults) {
+        const results = JSON.parse(userResults);
+        if (results.length > 0) {
+          // Get the most recent result
+          const mostRecent = results[results.length - 1];
+          setCourses(mostRecent.courses);
+        }
+      }
+    }
+    return !savedMatric;
+  });
+
+  // Load saved results from localStorage on initial render
+  useEffect(() => {
+    const loadSavedData = () => {
+      const savedMatric = localStorage.getItem('matricNumber');
+      if (!savedMatric) return;
+      
+      // Set the matric number in state
+      setMatricNumber(savedMatric);
+      
+      // Helper function to load courses from results
+      const loadCoursesFromResults = (results: SavedResult[]) => {
+        if (results.length > 0) {
+          const mostRecent = results[results.length - 1];
+          setCourses(mostRecent.courses);
+          return true;
+        }
+        return false;
+      };
+      
+      // Try to load from matric-specific storage first
+      const userResults = localStorage.getItem(`savedResults_${savedMatric}`);
+      if (userResults) {
+        const parsedResults = JSON.parse(userResults);
+        setSavedResults(parsedResults);
+        if (loadCoursesFromResults(parsedResults)) {
+          return; // Exit if courses were loaded
+        }
+      }
+      
+      // Fall back to global storage for backward compatibility
+      const allResults = localStorage.getItem('savedResults');
+      if (allResults) {
+        const userResultsFromGlobal = JSON.parse(allResults)
+          .filter((r: SavedResult) => r.matricNumber === savedMatric);
+        if (userResultsFromGlobal.length > 0) {
+          setSavedResults(userResultsFromGlobal);
+          loadCoursesFromResults(userResultsFromGlobal);
+        }
+      }
+    };
+    
+    loadSavedData();
+  }, [setCourses, setMatricNumber, setSavedResults]);
+
+  const handleSaveResult = () => {
+    const trimmedMatric = matricNumber.trim();
+    if (!trimmedMatric) {
+      alert('Please enter your matriculation number');
+      return;
+    }
+
+    const result: SavedResult = {
+      id: Date.now().toString(),
+      matricNumber: trimmedMatric,
+      courses: [...courses],
+      gpa,
+      date: new Date().toISOString(),
+      graduationStatus: graduationStatus
+    };
+
+    // Get existing results for this matric number
+    const userResults = savedResults.filter(r => r.matricNumber === trimmedMatric);
+    
+    // Add new result
+    const updatedResults = [...userResults, result];
+    
+    // Update state and localStorage
+    setSavedResults(updatedResults);
+    localStorage.setItem(`savedResults_${trimmedMatric}`, JSON.stringify(updatedResults));
+    
+    // Also update the global savedResults for backward compatibility
+    const allResults = JSON.parse(localStorage.getItem('savedResults') || '[]');
+    const otherResults = allResults.filter((r: SavedResult) => r.matricNumber !== trimmedMatric);
+    localStorage.setItem('savedResults', JSON.stringify([...otherResults, ...updatedResults]));
+    
+    setShowSaveDialog(false);
+    alert('Your results have been saved successfully!');
+  };
+
+  const promptSave = () => {
+    if (courses.length === 0) {
+      alert('Please add courses before saving');
+      return;
+    }
+    setShowSaveDialog(true);
+  };
   const [currentCourse, setCurrentCourse] = useState({
     courseId: '',
     grade: 'A'
@@ -177,6 +298,53 @@ function App() {
   };
 
   const graduationStatus = getGraduationStatus();
+  // Show matric number entry screen for new users
+  if (isNewUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+          <div className="text-center mb-6">
+            <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
+              <User className="w-8 h-8 text-emerald-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">Enter Your Matriculation Number</h2>
+            <p className="mt-2 text-gray-600">To get started, please enter your UNILAG matriculation number</p>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="matric-number" className="block text-sm font-medium text-gray-700 mb-1">
+                Matriculation Number
+              </label>
+              <input
+                type="text"
+                id="matric-number"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                placeholder="e.g. 190404000"
+                value={matricNumber}
+                onChange={(e) => setMatricNumber(e.target.value.toUpperCase())}
+                autoFocus
+              />
+            </div>
+            <button
+              onClick={() => {
+                const trimmedMatric = matricNumber.trim();
+                if (trimmedMatric) {
+                  localStorage.setItem('matricNumber', trimmedMatric);
+                  setIsNewUser(false);
+                } else {
+                  alert('Please enter your matriculation number');
+                }
+              }}
+              className="w-full bg-emerald-600 text-white py-2 px-4 rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors"
+            >
+              Continue to GPA Calculator
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-yellow-50">
       {/* Header */}
@@ -193,6 +361,14 @@ function App() {
               </div>
             </div>
             <div className="hidden md:flex items-center space-x-6 text-sm text-gray-600">
+              <button
+                onClick={promptSave}
+                className="flex items-center space-x-2 text-emerald-600 hover:text-emerald-700"
+                title="Save current progress"
+              >
+                <Save className="w-4 h-4" />
+                <span>Save Progress</span>
+              </button>
               <a href="https://balogunridwan.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
                 <div className="flex items-center space-x-2">
                   <Calculator className="w-4 h-4" />
@@ -476,6 +652,32 @@ function App() {
           </div>
         </div>
       </div>
+
+      {/* Save Confirmation Dialog */}
+      {showSaveDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Save Your Results</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to save your current course selection and results?
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowSaveDialog(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveResult}
+                className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
