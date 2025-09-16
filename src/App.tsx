@@ -67,10 +67,10 @@ function App() {
     const loadSavedData = () => {
       const savedMatric = localStorage.getItem('matricNumber');
       if (!savedMatric) return;
-      
+
       // Set the matric number in state
       setMatricNumber(savedMatric);
-      
+
       // Helper function to load courses from results
       const loadCoursesFromResults = (results: SavedResult[]) => {
         if (results.length > 0) {
@@ -80,7 +80,7 @@ function App() {
         }
         return false;
       };
-      
+
       // Try to load from matric-specific storage first
       const userResults = localStorage.getItem(`savedResults_${savedMatric}`);
       if (userResults) {
@@ -90,7 +90,7 @@ function App() {
           return; // Exit if courses were loaded
         }
       }
-      
+
       // Fall back to global storage for backward compatibility
       const allResults = localStorage.getItem('savedResults');
       if (allResults) {
@@ -102,7 +102,7 @@ function App() {
         }
       }
     };
-    
+
     loadSavedData();
   }, [setCourses, setMatricNumber, setSavedResults]);
 
@@ -124,19 +124,19 @@ function App() {
 
     // Get existing results for this matric number
     const userResults = savedResults.filter(r => r.matricNumber === trimmedMatric);
-    
+
     // Add new result
     const updatedResults = [...userResults, result];
-    
+
     // Update state and localStorage
     setSavedResults(updatedResults);
     localStorage.setItem(`savedResults_${trimmedMatric}`, JSON.stringify(updatedResults));
-    
+
     // Also update the global savedResults for backward compatibility
     const allResults = JSON.parse(localStorage.getItem('savedResults') || '[]');
     const otherResults = allResults.filter((r: SavedResult) => r.matricNumber !== trimmedMatric);
     localStorage.setItem('savedResults', JSON.stringify([...otherResults, ...updatedResults]));
-    
+
     setShowSaveDialog(false);
     alert('Your results have been saved successfully!');
   };
@@ -327,9 +327,8 @@ function App() {
               <input
                 type="text"
                 id="matric-number"
-                className={`w-full px-4 py-2 border ${
-                  matricNumber && (!/^\d{9}$/.test(matricNumber) ? 'border-red-500' : 'border-gray-300')
-                } rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500`}
+                className={`w-full px-4 py-2 border ${matricNumber && (!/^\d{9}$/.test(matricNumber) ? 'border-red-500' : 'border-gray-300')
+                  } rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500`}
                 placeholder="e.g. 190404000"
                 value={matricNumber}
                 onChange={(e) => {
@@ -371,8 +370,8 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-yellow-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-3">
               <div className="bg-emerald-600 p-2 rounded-lg">
                 <BookOpen className="w-6 h-6 text-white" />
@@ -382,34 +381,7 @@ function App() {
                 <p className="text-sm text-gray-600">GPA Calculator</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-4 text-sm text-gray-600">
-              <button
-                onClick={switchUser}
-                className="p-2 sm:px-3 sm:py-2 rounded-md hover:bg-gray-100 flex items-center space-x-1 sm:space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
-                title="Switch user"
-              >
-                <User className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="text-xs sm:text-sm">Switch</span>
-              </button>
-              <button
-                onClick={promptSave}
-                className="p-2 sm:px-3 sm:py-2 rounded-md hover:bg-emerald-50 flex items-center space-x-1 sm:space-x-2 text-emerald-600 hover:text-emerald-700 transition-colors"
-                title="Save current progress"
-              >
-                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="text-xs sm:text-sm">Save</span>
-              </button>
-              <a href="https://balogunridwan.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
-                <div className="flex items-center space-x-2">
-                  <Calculator className="w-4 h-4" />
-                  <span>Built by Ridwan Balogun</span>
-                </div>
-              </a>
-              {/* <div className="flex items-center space-x-2">
-                <Award className="w-4 h-4" />
-                <span>5-Point Scale</span>
-              </div> */}
-            </div>
+
           </div>
         </div>
       </div>
@@ -679,7 +651,53 @@ function App() {
                 </div>
               )}
             </div>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm">
+              {/* Mobile Action Buttons - Only shown on mobile */}
+              <div className="sm:hidden flex flex-col space-y-2 w-full">
+                <button
+                  onClick={promptSave}
+                  className="w-full py-2 px-4 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 flex items-center justify-center space-x-2"
+                >
+                  <Save className="w-5 h-5" />
+                  <span>Save Results</span>
+                </button>
+                <button
+                  onClick={switchUser}
+                  className="w-full py-2 px-4 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 flex items-center justify-center space-x-2"
+                >
+                  <User className="w-5 h-5" />
+                  <span>Switch User</span>
+                </button>
+              </div>
+
+              {/* Desktop Links */}
+              <div className="hidden sm:flex items-center space-x-4 text-gray-600">
+                <button
+                  onClick={promptSave}
+                  className="flex items-center space-x-2 text-emerald-600 hover:text-emerald-700"
+                  title="Save current progress"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Save Progress</span>
+                </button>
+                <button
+                  onClick={switchUser}
+                  className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+                  title="Switch user"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Switch User</span>
+                </button>
+                <a href="https://balogunridwan.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  <div className="flex items-center space-x-2">
+                    <Calculator className="w-4 h-4" />
+                    <span>Built by Ridwan Balogun</span>
+                  </div>
+                </a>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
 
