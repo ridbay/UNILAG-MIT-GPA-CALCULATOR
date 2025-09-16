@@ -35,6 +35,15 @@ function App() {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [savedResults, setSavedResults] = useState<SavedResult[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
+  const switchUser = () => {
+    // Clear current user data
+    setMatricNumber('');
+    setCourses([]);
+    setSavedResults([]);
+    localStorage.removeItem('matricNumber');
+    setIsNewUser(true);
+  };
+
   const [isNewUser, setIsNewUser] = useState(() => {
     // Check if user has a saved matric number
     const savedMatric = localStorage.getItem('matricNumber');
@@ -318,22 +327,35 @@ function App() {
               <input
                 type="text"
                 id="matric-number"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className={`w-full px-4 py-2 border ${
+                  matricNumber && (!/^\d{9}$/.test(matricNumber) ? 'border-red-500' : 'border-gray-300')
+                } rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500`}
                 placeholder="e.g. 190404000"
                 value={matricNumber}
-                onChange={(e) => setMatricNumber(e.target.value.toUpperCase())}
+                onChange={(e) => {
+                  // Only allow numbers and limit to 9 digits
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 9);
+                  setMatricNumber(value);
+                }}
                 autoFocus
               />
+              {matricNumber && !/^\d{9}$/.test(matricNumber) && (
+                <p className="mt-1 text-sm text-red-600">Matric number must be exactly 9 digits</p>
+              )}
             </div>
             <button
               onClick={() => {
                 const trimmedMatric = matricNumber.trim();
-                if (trimmedMatric) {
-                  localStorage.setItem('matricNumber', trimmedMatric);
-                  setIsNewUser(false);
-                } else {
+                if (!trimmedMatric) {
                   alert('Please enter your matriculation number');
+                  return;
                 }
+                if (!/^\d{9}$/.test(trimmedMatric)) {
+                  alert('Matric number must be exactly 9 digits');
+                  return;
+                }
+                localStorage.setItem('matricNumber', trimmedMatric);
+                setIsNewUser(false);
               }}
               className="w-full bg-emerald-600 text-white py-2 px-4 rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors"
             >
@@ -361,6 +383,14 @@ function App() {
               </div>
             </div>
             <div className="hidden md:flex items-center space-x-6 text-sm text-gray-600">
+              <button
+                onClick={switchUser}
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+                title="Switch user"
+              >
+                <User className="w-4 h-4" />
+                <span>Switch User</span>
+              </button>
               <button
                 onClick={promptSave}
                 className="flex items-center space-x-2 text-emerald-600 hover:text-emerald-700"
