@@ -4,21 +4,58 @@ interface ShareData {
   gpa: number;
   gpaClass: string;
   matricNumber: string;
+  coursesCount: number;
+  totalUnits: number;
+  totalGradePoints: number;
 }
 
-export async function shareAsImage(
-  elementId: string,
-  data: ShareData
-): Promise<void> {
-  const element = document.getElementById(elementId);
-  if (!element) {
-    console.error('Element not found:', elementId);
-    return;
-  }
+export async function shareAsImage(data: ShareData): Promise<void> {
+  // Create a temporary element for the share image
+  const shareCard = document.createElement('div');
+  shareCard.style.cssText = `
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    width: 400px;
+    padding: 32px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 24px;
+    font-family: system-ui, -apple-system, sans-serif;
+  `;
+  
+  shareCard.innerHTML = `
+    <div style="text-align: center; color: white;">
+      <div style="font-size: 72px; font-weight: 900; background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px;">
+        ${data.gpa.toFixed(2)}
+      </div>
+      <div style="font-size: 14px; color: #64748b; margin-bottom: 16px;">Cumulative GPA</div>
+      
+      <div style="display: inline-block; padding: 8px 20px; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 9999px; margin-bottom: 24px;">
+        <span style="color: #10b981; font-weight: 600;">${data.gpaClass}</span>
+      </div>
+      
+      <div style="display: flex; justify-content: center; gap: 24px;">
+        <div style="text-align: center;">
+          <div style="font-size: 24px; font-weight: 700; color: #f1f5f9;">${data.coursesCount}</div>
+          <div style="font-size: 11px; color: #64748b;">Courses</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 24px; font-weight: 700; color: #f1f5f9;">${data.totalUnits}</div>
+          <div style="font-size: 11px; color: #64748b;">Units</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 24px; font-weight: 700; color: #f1f5f9;">${data.totalGradePoints}</div>
+          <div style="font-size: 11px; color: #64748b;">Grade Points</div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(shareCard);
 
   try {
-    const canvas = await html2canvas(element, {
-      backgroundColor: '#1e293b',
+    const canvas = await html2canvas(shareCard, {
+      backgroundColor: null,
       scale: 2,
     });
 
@@ -31,7 +68,7 @@ export async function shareAsImage(
         try {
           await navigator.share({
             title: 'My GPA Result',
-            text: `I scored ${data.gpa.toFixed(2)} GPA (${data.gpaClass}) in UNILAG MIT Programme! 🎓`,
+            text: `I scored ${data.gpa.toFixed(2)} GPA (${data.gpaClass})! 🎓`,
             files: [file]
           });
           return;
@@ -44,7 +81,7 @@ export async function shareAsImage(
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `UNILAG_MIT_GPA_${data.gpa.toFixed(2)}.png`;
+      a.download = `GPA_${data.gpa.toFixed(2)}.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -52,5 +89,7 @@ export async function shareAsImage(
     }, 'image/png');
   } catch (err) {
     console.error('Failed to capture screenshot:', err);
+  } finally {
+    document.body.removeChild(shareCard);
   }
 }

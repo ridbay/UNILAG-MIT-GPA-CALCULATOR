@@ -66,10 +66,13 @@ function App() {
 
   // Handle share
   const handleShare = () => {
-    shareAsImage('gpa-display-card', {
+    shareAsImage({
       gpa: gpaCalculator.gpa,
       gpaClass: gpaCalculator.gpaClass,
-      matricNumber: userSession.matricNumber
+      matricNumber: userSession.matricNumber,
+      coursesCount: gpaCalculator.courses.length,
+      totalUnits: gpaCalculator.totalUnitsTaken,
+      totalGradePoints: gpaCalculator.totalGradePoints
     });
   };
 
