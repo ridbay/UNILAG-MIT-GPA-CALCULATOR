@@ -97,8 +97,24 @@ npm run preview
 ```
 UNILAG-MIT-GPA-CALCULATOR/
 ├── src/
+│   ├── components/      # UI Components
+│   │   ├── AddCourseForm.tsx   # Form for adding new courses
+│   │   ├── CourseList.tsx      # List of registered courses
+│   │   ├── GpaDisplay.tsx      # CGPA display card
+│   │   ├── GpaSimulator.tsx    # GPA goal simulation tool
+│   │   ├── RequirementsCard.tsx # Graduation requirements tracker
+│   │   └── ...                 # Other UI components
+│   ├── data/            # Static data configurations
+│   │   └── courses.ts          # Course definitions and grade data
+│   ├── hooks/           # Custom React hooks
+│   │   ├── useGpaCalculator.ts # Core GPA calculation logic
+│   │   └── useUserSession.ts   # User session & storage management
+│   ├── utils/           # Utility functions
+│   │   ├── exportPdf.ts        # PDF generation logic
+│   │   └── shareImage.ts       # Image sharing functionality
 │   ├── App.tsx          # Main application component
 │   ├── main.tsx         # React entry point
+│   ├── types.ts         # TypeScript type definitions
 │   ├── index.css        # Global styles
 │   └── vite-env.d.ts    # Vite type declarations
 ├── public/              # Static assets
