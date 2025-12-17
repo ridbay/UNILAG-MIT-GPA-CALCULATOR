@@ -15,6 +15,8 @@ A modern, responsive GPA calculator specifically designed for students of the **
 - **Local Storage Persistence**: Results are saved locally and persist across browser sessions
 - **Graduation Status Tracking**: Real-time feedback on academic standing and graduation eligibility
 - **Progress Requirements**: Tracks compulsory courses passed, minimum units, and outstanding units
+- **GPA Goal Simulator**: Calculate the grades needed to achieve your target CGPA
+- **Share & Export**: Share your results as an image or download as a comprehensive PDF report
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Switch User Support**: Multiple users can use the app on the same device
 
@@ -225,9 +227,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 💡 Future Enhancements
 
-- [ ] Export results as PDF
 - [ ] CGPA calculation across multiple semesters
-- [ ] Course grade predictions based on desired GPA
 - [ ] Dark mode support
 - [ ] Cloud sync with user authentication
 - [ ] Performance analytics and charts
