@@ -10,6 +10,7 @@ import { AddCourseForm } from './components/AddCourseForm';
 import { CourseList } from './components/CourseList';
 import { SaveDialog } from './components/SaveDialog';
 import { Course } from './types';
+import { exportToPDF } from './utils/exportPdf';
 
 function App() {
   const [pendingMatric, setPendingMatric] = useState('');
@@ -38,6 +39,21 @@ function App() {
   const handleSave = () => {
     const { status, color, description } = gpaCalculator.graduationStatus;
     userSession.saveResult(gpaCalculator.courses, gpaCalculator.gpa, { status, color, description });
+  };
+
+  // Handle PDF export
+  const handleExportPdf = () => {
+    const { status, description } = gpaCalculator.graduationStatus;
+    exportToPDF({
+      matricNumber: userSession.matricNumber,
+      courses: gpaCalculator.courses,
+      gpa: gpaCalculator.gpa,
+      gpaClass: gpaCalculator.gpaClass,
+      totalUnitsTaken: gpaCalculator.totalUnitsTaken,
+      totalUnitsPassed: gpaCalculator.totalUnitsPassed,
+      totalGradePoints: gpaCalculator.totalGradePoints,
+      graduationStatus: { status, description }
+    });
   };
 
   // Handle switch user (also reset courses)
@@ -108,6 +124,7 @@ function App() {
               courses={gpaCalculator.courses}
               onRemoveCourse={gpaCalculator.removeCourse}
               onSave={() => userSession.setShowSaveDialog(true)}
+              onExportPdf={handleExportPdf}
               canSave={gpaCalculator.courses.length > 0}
             />
           </div>

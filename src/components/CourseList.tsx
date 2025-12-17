@@ -1,4 +1,4 @@
-import { BookOpen, Trash2, Save, TrendingUp } from 'lucide-react';
+import { BookOpen, Trash2, Save, TrendingUp, FileDown } from 'lucide-react';
 import { Course, Grade } from '../types';
 import { GRADE_COLORS, GRADES, GRADE_SYSTEM, getCourseById } from '../data/courses';
 
@@ -6,10 +6,11 @@ interface CourseListProps {
   courses: Course[];
   onRemoveCourse: (id: string) => void;
   onSave: () => void;
+  onExportPdf: () => void;
   canSave: boolean;
 }
 
-export function CourseList({ courses, onRemoveCourse, onSave, canSave }: CourseListProps) {
+export function CourseList({ courses, onRemoveCourse, onSave, onExportPdf, canSave }: CourseListProps) {
   return (
     <div className="glass rounded-2xl p-4 sm:p-6 h-full overflow-hidden">
       <div className="flex items-center justify-between mb-6">
@@ -19,14 +20,25 @@ export function CourseList({ courses, onRemoveCourse, onSave, canSave }: CourseL
           <span className="text-sm font-normal text-slate-600 ml-2">({courses.length})</span>
         </h2>
         
-        <button
-          onClick={onSave}
-          disabled={!canSave}
-          className="flex items-center gap-2 px-4 py-2 bg-emerald-100 hover:bg-emerald-200 disabled:bg-slate-100 disabled:text-slate-400 text-emerald-700 rounded-lg transition-all duration-200"
-        >
-          <Save className="w-4 h-4" />
-          <span className="hidden sm:inline">Save</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onExportPdf}
+            disabled={!canSave}
+            className="flex items-center gap-2 px-3 py-2 bg-blue-100 hover:bg-blue-200 disabled:bg-slate-100 disabled:text-slate-400 text-blue-700 rounded-lg transition-colors"
+            title="Export as PDF"
+          >
+            <FileDown className="w-4 h-4" />
+            <span className="hidden sm:inline">PDF</span>
+          </button>
+          <button
+            onClick={onSave}
+            disabled={!canSave}
+            className="flex items-center gap-2 px-3 py-2 bg-emerald-100 hover:bg-emerald-200 disabled:bg-slate-100 disabled:text-slate-400 text-emerald-700 rounded-lg transition-colors"
+          >
+            <Save className="w-4 h-4" />
+            <span className="hidden sm:inline">Save</span>
+          </button>
+        </div>
       </div>
 
       {courses.length === 0 ? (
