@@ -112,15 +112,17 @@ export function exportToPDF(data: ExportData): void {
   
   const col1 = margin + 3;
   const col2 = margin + 25;
-  const col3 = pageWidth - margin - 50;
-  const col4 = pageWidth - margin - 35;
-  const col5 = pageWidth - margin - 18;
+  const col3 = pageWidth - margin - 65;
+  const col4 = pageWidth - margin - 50;
+  const col5 = pageWidth - margin - 35;
+  const col6 = pageWidth - margin - 15;
   
   doc.text('S/N', col1, yPos + 6);
   doc.text('Course', col2, yPos + 6);
   doc.text('Units', col3, yPos + 6);
   doc.text('Grade', col4, yPos + 6);
   doc.text('Points', col5, yPos + 6);
+  doc.text('Total', col6, yPos + 6);
   
   yPos += 10;
   doc.setTextColor(0, 0, 0);
@@ -166,6 +168,10 @@ export function exportToPDF(data: ExportData): void {
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'normal');
     doc.text(course.gradePoint.toString(), col5, yPos);
+    
+    // Total Grade Point (Unit * Point)
+    const totalGP = course.creditUnit * course.gradePoint;
+    doc.text(totalGP.toString(), col6, yPos);
     
     yPos += 8;
     
