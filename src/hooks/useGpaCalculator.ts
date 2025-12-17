@@ -11,6 +11,7 @@ interface UseGpaCalculatorReturn {
   // Actions
   addCourse: () => boolean;
   removeCourse: (id: string) => void;
+  updateCourseGrade: (id: string, grade: Grade) => void;
   setCurrentCourse: (course: { courseId: string; grade: Grade }) => void;
   setCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   
@@ -62,6 +63,15 @@ export function useGpaCalculator(): UseGpaCalculatorReturn {
   // Remove a course
   const removeCourse = useCallback((id: string) => {
     setCourses(prev => prev.filter(course => course.id !== id));
+  }, []);
+
+  // Update course grade
+  const updateCourseGrade = useCallback((id: string, grade: Grade) => {
+    setCourses(prev => prev.map(course => 
+      course.id === id 
+        ? { ...course, grade, gradePoint: GRADE_SYSTEM[grade] }
+        : course
+    ));
   }, []);
 
   // Calculate GPA
@@ -171,6 +181,7 @@ export function useGpaCalculator(): UseGpaCalculatorReturn {
     currentCourse,
     addCourse,
     removeCourse,
+    updateCourseGrade,
     setCurrentCourse,
     setCourses,
     gpa,

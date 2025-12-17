@@ -59,9 +59,9 @@ export function AddCourseForm({
               <button
                 key={grade}
                 onClick={() => onCourseChange({ ...currentCourse, grade })}
-                className={`py-1.5 sm:py-0 rounded-lg font-bold text-xs sm:text-sm transition-all duration-200 ${
+                className={`py-1.5 sm:py-2 rounded-lg font-bold text-xs sm:text-sm transition-colors ${
                   currentCourse.grade === grade
-                    ? `bg-gradient-to-br ${GRADE_COLORS[grade]} text-white shadow-lg scale-105 sm:scale-110`
+                    ? `bg-gradient-to-br ${GRADE_COLORS[grade]} text-white`
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900'
                 }`}
               >
@@ -74,7 +74,7 @@ export function AddCourseForm({
         <button
           onClick={onAddCourse}
           disabled={!currentCourse.courseId}
-          className="btn-premium w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 disabled:shadow-none"
+          className="btn-premium w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2"
         >
           <Plus className="w-4 h-4" />
           Add Course

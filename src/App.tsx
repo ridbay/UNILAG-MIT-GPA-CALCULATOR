@@ -9,8 +9,10 @@ import { RequirementsCard } from './components/RequirementsCard';
 import { AddCourseForm } from './components/AddCourseForm';
 import { CourseList } from './components/CourseList';
 import { SaveDialog } from './components/SaveDialog';
+import { GpaSimulator } from './components/GpaSimulator';
 import { Course } from './types';
 import { exportToPDF } from './utils/exportPdf';
+import { shareAsImage } from './utils/shareImage';
 
 function App() {
   const [pendingMatric, setPendingMatric] = useState('');
@@ -60,6 +62,15 @@ function App() {
   const handleSwitchUser = () => {
     userSession.switchUser();
     gpaCalculator.setCourses([]);
+  };
+
+  // Handle share
+  const handleShare = () => {
+    shareAsImage('gpa-display-card', {
+      gpa: gpaCalculator.gpa,
+      gpaClass: gpaCalculator.gpaClass,
+      matricNumber: userSession.matricNumber
+    });
   };
 
   // Show welcome screen for new users
@@ -119,13 +130,21 @@ function App() {
           </div>
 
           {/* Right Column */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-6">
             <CourseList
               courses={gpaCalculator.courses}
               onRemoveCourse={gpaCalculator.removeCourse}
+              onUpdateGrade={gpaCalculator.updateCourseGrade}
               onSave={() => userSession.setShowSaveDialog(true)}
               onExportPdf={handleExportPdf}
+              onShare={handleShare}
               canSave={gpaCalculator.courses.length > 0}
+            />
+
+            {/* GPA Simulator - Last on mobile */}
+            <GpaSimulator
+              currentGpa={gpaCalculator.gpa}
+              totalUnits={gpaCalculator.totalUnitsTaken}
             />
           </div>
         </div>

@@ -1,18 +1,20 @@
-import { BookOpen, Trash2, Save, TrendingUp, FileDown } from 'lucide-react';
+import { BookOpen, Trash2, Save, TrendingUp, FileDown, Share2 } from 'lucide-react';
 import { Course, Grade } from '../types';
 import { GRADE_COLORS, GRADES, GRADE_SYSTEM, getCourseById } from '../data/courses';
 
 interface CourseListProps {
   courses: Course[];
   onRemoveCourse: (id: string) => void;
+  onUpdateGrade: (id: string, grade: Grade) => void;
   onSave: () => void;
   onExportPdf: () => void;
+  onShare: () => void;
   canSave: boolean;
 }
 
-export function CourseList({ courses, onRemoveCourse, onSave, onExportPdf, canSave }: CourseListProps) {
+export function CourseList({ courses, onRemoveCourse, onUpdateGrade, onSave, onExportPdf, onShare, canSave }: CourseListProps) {
   return (
-    <div className="glass rounded-2xl p-4 sm:p-6 h-full overflow-hidden">
+    <div className="glass rounded-2xl p-4 sm:p-6 overflow-hidden">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-emerald-600" />
@@ -29,6 +31,15 @@ export function CourseList({ courses, onRemoveCourse, onSave, onExportPdf, canSa
           >
             <FileDown className="w-4 h-4" />
             <span className="hidden sm:inline">PDF</span>
+          </button>
+          <button
+            onClick={onShare}
+            disabled={!canSave}
+            className="flex items-center gap-2 px-3 py-2 bg-purple-100 hover:bg-purple-200 disabled:bg-slate-100 disabled:text-slate-400 text-purple-700 rounded-lg transition-colors"
+            title="Share as Image"
+          >
+            <Share2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Share</span>
           </button>
           <button
             onClick={onSave}
@@ -59,9 +70,20 @@ export function CourseList({ courses, onRemoveCourse, onSave, onExportPdf, canSa
                 className="bg-slate-50 hover:bg-slate-100 rounded-xl p-3 sm:p-4 border border-slate-200"
               >
                 <div className="flex items-center gap-3 sm:gap-4">
-                  {/* Grade Badge */}
-                  <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br ${GRADE_COLORS[course.grade as Grade]} flex items-center justify-center`}>
-                    <span className="text-white font-bold text-lg sm:text-xl">{course.grade}</span>
+                  {/* Grade Badge - Clickable for editing */}
+                  <div className="relative group">
+                    <select
+                      value={course.grade}
+                      onChange={(e) => onUpdateGrade(course.id, e.target.value as Grade)}
+                      className={`w-10 h-10 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br ${GRADE_COLORS[course.grade as Grade]} text-white font-bold text-lg sm:text-xl text-center appearance-none cursor-pointer border-0 outline-none`}
+                      title="Click to change grade"
+                    >
+                      {GRADES.map((g) => (
+                        <option key={g} value={g} className="bg-slate-800 text-white">
+                          {g}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   
                   {/* Course Info */}
