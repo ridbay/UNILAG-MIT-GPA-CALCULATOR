@@ -651,7 +651,7 @@ function App() {
                 </div>
               )}
             </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm mt-10">
               {/* Mobile Action Buttons - Only shown on mobile */}
               <div className="sm:hidden flex flex-col space-y-2 w-full">
                 <button
@@ -674,18 +674,18 @@ function App() {
               <div className="hidden sm:flex items-center space-x-4 text-gray-600">
                 <button
                   onClick={promptSave}
-                  className="flex items-center space-x-2 text-emerald-600 hover:text-emerald-700"
+                  className="flex items-center space-x-2 bg-white hover:bg-emerald-50 text-emerald-700 hover:text-emerald-800 font-semibold py-2 px-4 rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all duration-200 shadow-sm"
                   title="Save current progress"
                 >
-                  <Save className="w-4 h-4" />
+                  <Save className="w-5 h-5" />
                   <span>Save Progress</span>
                 </button>
                 <button
                   onClick={switchUser}
-                  className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+                  className="flex items-center space-x-2 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 font-semibold py-2 px-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-200 shadow-sm"
                   title="Switch user"
                 >
-                  <User className="w-4 h-4" />
+                  <User className="w-5 h-5" />
                   <span>Switch User</span>
                 </button>
                 <a href="https://balogunridwan.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
