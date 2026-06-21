@@ -100,55 +100,74 @@ function App() {
         onSwitchUser={handleSwitchUser}
       />
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Left Column */}
-          <div className="lg:col-span-1 space-y-6">
-            <GpaDisplay
-              gpa={gpaCalculator.gpa}
-              gpaClass={gpaCalculator.gpaClass}
-              graduationStatus={gpaCalculator.graduationStatus}
-            />
+      <main className="relative z-10 max-w-[1400px] mx-auto px-4 py-12">
+        <div className="bento-grid">
+          {/* Left Column - Fixed Width Content */}
+          <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
+            <div className="stagger-item">
+              <GpaDisplay
+                gpa={gpaCalculator.gpa}
+                gpaClass={gpaCalculator.gpaClass}
+                graduationStatus={gpaCalculator.graduationStatus}
+              />
+            </div>
 
-            <StatsGrid
-              coursesCount={gpaCalculator.courses.length}
-              totalUnitsTaken={gpaCalculator.totalUnitsTaken}
-              totalUnitsPassed={gpaCalculator.totalUnitsPassed}
-              totalGradePoints={gpaCalculator.totalGradePoints}
-            />
+            <div className="stagger-item">
+              <StatsGrid
+                coursesCount={gpaCalculator.courses.length}
+                totalUnitsTaken={gpaCalculator.totalUnitsTaken}
+                totalUnitsPassed={gpaCalculator.totalUnitsPassed}
+                totalGradePoints={gpaCalculator.totalGradePoints}
+              />
+            </div>
 
-            <RequirementsCard
-              passedCompulsoryCourses={gpaCalculator.passedCompulsoryCourses}
-              totalUnitsPassed={gpaCalculator.totalUnitsPassed}
-              meetsMinimumUnits={gpaCalculator.meetsMinimumUnits}
-              outstandingUnits={gpaCalculator.outstandingUnits}
-            />
+            <div className="stagger-item">
+              <div className="bento-item">
+                <RequirementsCard
+                  passedCompulsoryCourses={gpaCalculator.passedCompulsoryCourses}
+                  totalUnitsPassed={gpaCalculator.totalUnitsPassed}
+                  meetsMinimumUnits={gpaCalculator.meetsMinimumUnits}
+                  outstandingUnits={gpaCalculator.outstandingUnits}
+                />
+              </div>
+            </div>
 
-            <AddCourseForm
-              currentCourse={gpaCalculator.currentCourse}
-              availableCourses={gpaCalculator.availableCoursesFiltered}
-              onCourseChange={gpaCalculator.setCurrentCourse}
-              onAddCourse={gpaCalculator.addCourse}
-            />
+            <div className="stagger-item">
+              <div className="bento-item">
+                <AddCourseForm
+                  currentCourse={gpaCalculator.currentCourse}
+                  availableCourses={gpaCalculator.availableCoursesFiltered}
+                  onCourseChange={gpaCalculator.setCurrentCourse}
+                  onAddCourse={gpaCalculator.addCourse}
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Right Column */}
-          <div className="lg:col-span-2 space-y-6">
-            <CourseList
-              courses={gpaCalculator.courses}
-              onRemoveCourse={gpaCalculator.removeCourse}
-              onUpdateGrade={gpaCalculator.updateCourseGrade}
-              onSave={() => userSession.setShowSaveDialog(true)}
-              onExportPdf={handleExportPdf}
-              onShare={handleShare}
-              canSave={gpaCalculator.courses.length > 0}
-            />
+          {/* Right Column - Main Content Area */}
+          <div className="col-span-12 lg:col-span-8 flex flex-col gap-6">
+            <div className="stagger-item h-full min-h-[500px]">
+              <div className="bento-item h-full flex flex-col">
+                <CourseList
+                  courses={gpaCalculator.courses}
+                  onRemoveCourse={gpaCalculator.removeCourse}
+                  onUpdateGrade={gpaCalculator.updateCourseGrade}
+                  onSave={() => userSession.setShowSaveDialog(true)}
+                  onExportPdf={handleExportPdf}
+                  onShare={handleShare}
+                  canSave={gpaCalculator.courses.length > 0}
+                />
+              </div>
+            </div>
 
-            {/* GPA Simulator - Last on mobile */}
-            <GpaSimulator
-              currentGpa={gpaCalculator.gpa}
-              totalUnits={gpaCalculator.totalUnitsTaken}
-            />
+            <div className="stagger-item">
+              <div className="bento-item">
+                <GpaSimulator
+                  currentGpa={gpaCalculator.gpa}
+                  totalUnits={gpaCalculator.totalUnitsTaken}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </main>

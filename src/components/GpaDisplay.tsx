@@ -94,48 +94,89 @@ export function GpaDisplay({ gpa, gpaClass, graduationStatus }: GpaDisplayProps)
 
   return (
     <div className="relative">
-      <div id="gpa-display-card" ref={cardRef} className="glass rounded-2xl p-6 card-hover">
-        <div className="text-center">
-          {/* Giant GPA Number */}
-          <div className="relative inline-block mb-4">
-            <div className={`text-7xl font-black bg-gradient-to-br ${getGpaGradient()} bg-clip-text text-transparent`}>
-              {gpa.toFixed(2)}
+      <div id="gpa-display-card" ref={cardRef} className="bento-item col-span-12 lg:col-span-12 flex flex-col items-center justify-center min-h-[300px]">
+        <div className="text-center w-full relative z-10">
+          {/* Circular Progress & Giant GPA Number */}
+          <div className="relative inline-flex items-center justify-center w-64 h-64 mb-6">
+            {/* SVG Ring */}
+            <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              {/* Background track */}
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="rgba(255,255,255,0.1)"
+                strokeWidth="8"
+                className="transition-all duration-1000 ease-out"
+              />
+              {/* Progress track */}
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke={gpa >= 4.50 ? '#10b981' : gpa >= 2.40 ? '#3b82f6' : gpa >= 1.50 ? '#f97316' : '#ef4444'}
+                strokeWidth="8"
+                strokeLinecap="round"
+                strokeDasharray={`${(gpa / 5) * 283} 283`}
+                className="transition-all duration-1000 ease-out animate-pulse-glow"
+              />
+            </svg>
+
+            {/* Inner Content */}
+            <div className="flex flex-col items-center justify-center absolute inset-0">
+              <div className={`text-6xl font-black bg-gradient-to-br ${getGpaGradient()} bg-clip-text text-transparent`}>
+                {gpa.toFixed(2)}
+              </div>
+              <div className="text-slate-400 text-xs font-medium uppercase tracking-wider mt-1">out of 5.0</div>
             </div>
+
             {gpa >= 4.50 && (
-              <div className="absolute -top-2 -right-2">
-                <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
+              <div className="absolute top-0 right-0 animate-spin-slow">
+                <Sparkles className="w-8 h-8 text-yellow-400" />
               </div>
             )}
           </div>
           
-          <div className="text-slate-700 text-sm mb-4">Cumulative GPA</div>
-          
+          {/* GPA Class Badge */}
           {gpa > 0 && (
-            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${getClassBadgeColors()}`}>
-              <span className={`font-semibold ${getClassTextColor()}`}>
+            <div className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-gradient-to-r ${getClassBadgeColors()} shadow-xl backdrop-blur-md mb-6 transition-transform hover:scale-105 cursor-default`}>
+              <span className={`font-bold ${getClassTextColor()} tracking-wide`}>
                 {gpaClass}
               </span>
             </div>
           )}
         </div>
 
-        {/* Graduation Status */}
-        <div className="mt-6 pt-6 border-t border-white/10">
-          <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg bg-gradient-to-br ${getStatusBgGradient()}`}>
-              <StatusIcon className={`w-5 h-5 ${graduationStatus.color}`} />
+        {/* Gamification / Next Milestone */}
+        {gpa > 0 && gpa < 4.50 && (
+          <div className="w-full mt-2 pt-6 border-t border-white/5">
+            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+              <p className="text-sm text-slate-300">
+                <span className="font-semibold text-white">Next Milestone:</span> Keep pushing! You're on your way to the next class.
+              </p>
             </div>
-            <div className="flex-1">
-              <div className={`font-semibold ${graduationStatus.color}`}>{graduationStatus.status}</div>
-              <div className="text-xs text-slate-600">{graduationStatus.description}</div>
+          </div>
+        )}
+
+        {/* Graduation Status */}
+        <div className="w-full mt-6 pt-6 border-t border-white/5">
+          <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 transition-colors hover:bg-white/10">
+            <div className={`p-3 rounded-xl bg-gradient-to-br ${getStatusBgGradient()}`}>
+              <StatusIcon className={`w-6 h-6 ${graduationStatus.color}`} />
+            </div>
+            <div className="flex-1 text-left">
+              <div className={`font-bold text-lg ${graduationStatus.color}`}>{graduationStatus.status}</div>
+              <div className="text-sm text-slate-400">{graduationStatus.description}</div>
             </div>
           </div>
         </div>
 
         {/* Branding for screenshot */}
         {gpa > 0 && (
-          <div className="mt-4 pt-4 border-t border-white/5 text-center">
-            <div className="text-xs text-slate-500">UNILAG MIT GPA Calculator</div>
+          <div className="mt-6 pt-4 border-t border-white/5 text-center w-full">
+            <div className="text-xs text-slate-500 font-medium tracking-wide">UNILAG MIT GPA Calculator</div>
           </div>
         )}
       </div>
