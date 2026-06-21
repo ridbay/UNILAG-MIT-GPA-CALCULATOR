@@ -47,9 +47,12 @@ export function GpaSimulator({ currentGpa, totalUnits }: GpaSimulatorProps) {
     } else if (requiredAvgGrade >= 1.0) {
       gradeNeeded = 'D-E Average';
       gradeColor = 'text-orange-600';
-    } else if (requiredAvgGrade >= 0) {
+    } else if (requiredAvgGrade > 0) {
       gradeNeeded = 'Just Pass';
       gradeColor = 'text-red-600';
+    } else {
+      gradeNeeded = 'No points needed';
+      gradeColor = 'text-emerald-500';
     }
 
     return {
@@ -160,9 +163,17 @@ export function GpaSimulator({ currentGpa, totalUnits }: GpaSimulatorProps) {
                   </span>
                 </div>
                 <div className="text-xs text-slate-500">
-                  You need to average <strong>{simulation.requiredAvgGrade.toFixed(2)}</strong> grade points 
-                  across your next <strong>{simulation.additionalUnits}</strong> units to reach a 
-                  <strong> {simulation.targetGpa.toFixed(2)}</strong> GPA.
+                  {simulation.requiredAvgGrade <= 0 ? (
+                    <>
+                      You are already performing so well that you don't even need to score any points in your next <strong>{simulation.additionalUnits}</strong> units to maintain at least a <strong>{simulation.targetGpa.toFixed(2)}</strong> GPA!
+                    </>
+                  ) : (
+                    <>
+                      You need to average <strong>{simulation.requiredAvgGrade.toFixed(2)}</strong> grade points 
+                      across your next <strong>{simulation.additionalUnits}</strong> units to {simulation.currentGpa >= simulation.targetGpa ? 'maintain at least a' : 'reach a'} 
+                      <strong> {simulation.targetGpa.toFixed(2)}</strong> GPA.
+                    </>
+                  )}
                 </div>
               </div>
             ) : (
