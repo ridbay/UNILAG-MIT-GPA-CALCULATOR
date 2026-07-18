@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS results;
+CREATE TABLE results (
+    matric_number TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    data TEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

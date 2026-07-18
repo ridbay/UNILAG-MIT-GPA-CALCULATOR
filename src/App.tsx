@@ -16,6 +16,7 @@ import { shareAsImage } from './utils/shareImage';
 
 function App() {
   const [pendingMatric, setPendingMatric] = useState('');
+  const [pendingName, setPendingName] = useState('');
   
   const gpaCalculator = useGpaCalculator();
   
@@ -32,9 +33,10 @@ function App() {
   const userSession = useUserSession(handleCoursesLoaded);
 
   // Handle login
-  const handleLogin = () => {
-    userSession.login(pendingMatric);
+  const handleLogin = (officialName?: string) => {
+    userSession.login(officialName || pendingName, pendingMatric);
     setPendingMatric('');
+    setPendingName('');
   };
 
   // Handle save
@@ -80,6 +82,8 @@ function App() {
   if (userSession.isNewUser) {
     return (
       <WelcomeScreen
+        name={pendingName}
+        onNameChange={setPendingName}
         matricNumber={pendingMatric}
         onMatricChange={setPendingMatric}
         onLogin={handleLogin}

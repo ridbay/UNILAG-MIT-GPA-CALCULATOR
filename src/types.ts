@@ -25,6 +25,7 @@ export interface GraduationStatus {
 export interface SavedResult {
   id: string;
   matricNumber: string;
+  name: string;
   courses: Course[];
   gpa: number;
   date: string;
