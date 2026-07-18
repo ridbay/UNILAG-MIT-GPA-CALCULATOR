@@ -3,6 +3,6 @@ compatibility_date = "2024-03-20"
 pages_build_output_dir = "dist"
 
 [[d1_databases]]
-binding = "DB"
+binding = "gpa_calculator_db"
 database_name = "gpa-calculator-db"
-database_id = "YOUR_DATABASE_ID"
+database_id = "a8647427-6d1e-4c29-9e30-9d48ea5e352d"
